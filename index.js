@@ -23,7 +23,10 @@ async function run() {
 
         const plantCollection = client.db("plantDb").collection("plants")
 
-        
+        app.get('/plants', async(req, res) => {
+            const result = await plantCollection.find().toArray()
+            res.send(result)
+        })
 
         app.post('/plants', async (req, res) => {
             const newPlants = req.body
