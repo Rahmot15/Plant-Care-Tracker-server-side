@@ -43,12 +43,35 @@ async function run() {
 
         })
 
+        app.put('/plants/:id', async (req, res) => {
+            const { id } = req.params
+            const { name, HealthStatus, PhotoUrl, Category, lastDate, nextDate, CareLevel, textarea } = req.body
+            const query = { _id: new ObjectId(id) }
+
+            const updateData = {
+                $set: {
+                    name,
+                    HealthStatus,
+                    PhotoUrl,
+                    Category,
+                    lastDate,
+                    nextDate,
+                    CareLevel,
+                    textarea
+                }
+            }
+            const result = await plantCollection.updateOne(query, updateData)
+            res.send(result)
+        })
+
         app.delete('/plants/:id', async (req, res) => {
             const { id } = req.params
-            const query = { _id: new ObjectId(id) } 
+            const query = { _id: new ObjectId(id) }
             const result = await plantCollection.deleteOne(query)
             res.send(result)
         })
+
+
 
 
         await client.db("admin").command({ ping: 1 });
