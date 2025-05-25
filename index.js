@@ -24,7 +24,12 @@ async function run() {
         const userCollection = client.db("plantDb").collection('users')
 
         app.get('/plants', async (req, res) => {
-            const result = await plantCollection.find().toArray()
+            const email = req.query.email;
+            let query = {};
+            if (email) {
+                query = { email: email };
+            }
+            const result = await plantCollection.find(query).toArray()
             res.send(result)
         })
 
@@ -85,7 +90,7 @@ async function run() {
 
         app.patch('/users', async (req, res) => {
             const { email, lastSignInTime } = req.body;
-            const filter = {email: email}
+            const filter = { email: email }
             const updateDoc = {
                 $set: {
                     lastSignInTime: lastSignInTime
