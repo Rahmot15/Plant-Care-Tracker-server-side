@@ -20,8 +20,8 @@ const client = new MongoClient(uri, {
 async function run() {
     try {
         await client.connect();
-
         const plantCollection = client.db("plantDb").collection("plants")
+        const userCollection = client.db("plantDb").collection('users')
 
         app.get('/plants', async (req, res) => {
             const result = await plantCollection.find().toArray()
@@ -72,6 +72,30 @@ async function run() {
         })
 
 
+        // User related apis
+        app.get('/users', async (req, res) => {
+            const result = await userCollection.find().toArray()
+            res.send(result)
+        })
+
+        app.post('/users', async (req, res) => {
+            const result = await userCollection.insertOne(req.body)
+            res.send(result)
+        })
+
+        app.patch('/users', async (req, res) => {
+            const { email, lastSignInTime } = req.body;
+            const filter = {email: email}
+            const updateDoc = {
+                $set: {
+                    lastSignInTime: lastSignInTime
+                }
+            }
+            const result = await userCollection.updateOne(filter, updateDoc)
+            res.send(result)
+
+
+        })
 
 
         await client.db("admin").command({ ping: 1 });
