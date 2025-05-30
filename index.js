@@ -1,11 +1,12 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config()
-const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
-
 const app = express()
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const port = process.env.PORT || 3000;
 
+app.use(cors())
+app.use(express.json())
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@plants.7qpmfri.mongodb.net/?retryWrites=true&w=majority&appName=plants`;
 
@@ -19,7 +20,7 @@ const client = new MongoClient(uri, {
 
 async function run() {
     try {
-        await client.connect();
+        
         const plantCollection = client.db("plantDb").collection("plants")
         const userCollection = client.db("plantDb").collection('users')
 
